@@ -1,0 +1,56 @@
+
+{% extends 'backweb/base.html' %}
+{% block title %}
+    article
+{% endblock %}
+{% block h1 %}
+  操作
+{% endblock %}
+{% block right %}
+
+<div class="row">
+        <form action="" method="post" class="add-article-form" enctype="multipart/form-data">
+            {{ form.error }}
+            {% csrf_token %}
+          <div class="col-md-9">
+            <h1 class="page-header">撰写新文章</h1>
+            <div class="form-group">
+              <label for="article-title" class="sr-only">标题</label>
+              <input type="text" id="article-title" name="title" class="form-control" placeholder="在此处输入标题" value="{{ article.title}}">
+                <p style="color:red">{{ form.errors.title }}</p>
+            </div>
+            <div class="form-group">
+              <textarea class="sr-only" id="editor_id" name="content">{{ article.content }}</textarea>
+                <p style="color:red">{{ form.errors.content }}</p>
+            </div>
+
+            <div class="add-article-box">
+              <h2 class="add-article-box-title" ><span>描述</span></h2>
+              <div class="add-article-box-content">
+              	<textarea class="form-control" name="desc" autocomplete="off">{{ article.desc }}</textarea>
+                  <p style="color: red">{{ form.errors.desc }}</p>
+                <span class="prompt-text">描述内容总结，并可以在网页描述中使用</span>
+              </div>
+            </div>
+
+                 <P>首图: <input type='file' name="icon">
+                                 {% if article.icon %}
+                                    <img src="/media/{{ article.icon }}">
+                                {%  endif %}
+              <input type="submit" value="提交">
+          </div>
+
+
+{% endblock %}
+{% block js %}
+    {% load static %}
+    <script src="{% static 'kindeditor/kindeditor-all-min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'kindeditor/lang/zh-CN.js' %}" type="text/javascript"></script>
+    <script type="text/javascript">
+        KindEditor.ready(function(K) {
+            window.editor = K.create('#editor_id',{
+                uploadJson:'/util/upload/kindeditor'
+            });
+        });
+    </script>
+{% endblock %}

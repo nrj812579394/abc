@@ -1,0 +1,75 @@
+
+{% extends 'backweb/base.html' %}
+{% block title %}
+    article
+{% endblock %}
+{% block h1 %}
+  操作
+{% endblock %}
+{% block right %}
+
+<form action="" method="post" alt="" enctype="multipart/form-data">
+                {% csrf_token %}
+
+        <h1 class="page-header">操作</h1>
+        <ol class="breadcrumb">
+          <li><a href="/backweb/add_art/">增加文章</a></li>
+        </ol>
+        <h1 class="page-header">管理 <span class="badge">{{ pages.paginator.count }}</span></h1>
+        <div class="table-responsive">
+          <table class="table table-striped table-hover">
+            <thead>
+              <tr>
+                <th><span class="glyphicon glyphicon-th-large"></span> <span class="visible-lg">选择</span></th>
+                <th><span class="glyphicon glyphicon-file"></span> <span class="visible-lg">标题</span></th>
+                 <th><span class=""></span> <span class=""></span>内容</th>
+                <th><span class=""></span> <span class=""></span>描述</th>
+                <th><span class=""></span> <span class=""></span>日期</th>
+                <th><span class="glyphicon glyphicon-time"></span> <span class="visible-lg">图片</span></th>
+                <th><span class="glyphicon glyphicon-pencil"></span> <span class="visible-lg">操作</span></th>
+              </tr>
+            </thead>
+            {% for page in pages %}
+            <tbody>
+              <tr>
+                <td><input type="checkbox" class="input-control" name="checkbox[]" value="" /></td>
+                <td class="article-title">{{ page.title }} </td>
+                <td class="article-title">{{ page.content }} </td>
+                <td class="hidden-sm">{{ page.desc }}</td>
+                <td class="hidden-sm">{{ page.create_time }}</td>
+
+                <td><img width="50" height="50" alt=""  src="/media/{{ page.icon }}"></td>
+                <td>
+                    <a href="{% url 'art:edit_art' page.id %}">编辑</a>
+                    <a href="{% url 'art:del_art' page.id %}">删除</a>
+
+                </td>
+              </tr>
+            </tbody>
+            {% endfor %}
+          </table>
+        </div>
+        <footer class="message_footer">
+          <nav>
+            <div class="btn-toolbar operation" role="toolbar">
+              <div class="btn-group" role="group"> <a class="btn btn-default" onClick="select()">全选</a> <a class="btn btn-default" onClick="reverse()">反选</a> <a class="btn btn-default" onClick="noselect()">不选</a> </div>
+              <div class="btn-group" role="group">
+                <button type="submit" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="删除全部选中" name="checkbox_delete">删除</button>
+              </div>
+            </div>
+            <ul class="pagination pagenav">
+                    {% if pages.has_previous %}
+              <li><a href="{% url 'art:art_list' %}?page={{ pages.previous_page_number }}" aria-label="Previous" > <span aria-hidden="true">&laquo;</span> </a> </li>
+                    {% endif %}
+            {% for page in pages.paginator.page_range %}
+              <li><a href="{% url 'art:art_list' %}?page={{ page }}">{{ page }}</a></li>
+            {% endfor %}
+                    {% if pages.has_next %}
+              <li><a href="{% url 'art:art_list' %}?page={{ pages.next_page_number }}" aria-label="Next"> <span aria-hidden="true">&raquo;</span> </a> </li>
+                    {% endif %}
+            </ul>
+          </nav>
+        </footer>
+      </form>
+
+{% endblock %}
